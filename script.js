@@ -4,11 +4,10 @@ const itemInput = document.getElementById("item-input")
 const itemList = document.getElementById("item-list")
 const itemFilter = document.getElementById("filter")
 const clearBtn = document.getElementById("clear")
-const filterIcon = document.querySelector("div > i")
 const formBtn = document.getElementById("form-btn")
 let isEditMode = false
 
-// 10. Function to display items from local storage on page load
+// 10. Function to display items from local storage
 function displayItemsFromStorage() {
   const itemsFromStorage = getItemsFromStorage()
   itemsFromStorage.forEach((item) => {
@@ -17,21 +16,19 @@ function displayItemsFromStorage() {
   resetUI()
 }
 
-// 1. Function to handle form submission
+// 1. Function to handle form submition
 function handleFormSubmit(e) {
   e.preventDefault()
   const newItem = itemInput.value.trim()
-
-  // Check if the input is empty
   if (!newItem) {
-    alert("Please enter an item")
+    alert("Please enter a an item")
     return
   }
 
-  // Check if the input is in edit mode
+  // Check for edit mode
   if (isEditMode) {
     const itemToEdit = itemList.querySelector(".edit-mode")
-    removeItemFromStorage(itemToEdit.textContent)
+    removeItemFromStorage(itemToEdit)
     itemToEdit.classList.remove("edit-mode")
     itemToEdit.remove()
     isEditMode = false
@@ -45,37 +42,52 @@ function handleFormSubmit(e) {
   // Add item to the DOM, local storage, and reset UI
   addItemToDOM(newItem)
   addItemToStorage(newItem)
-  itemInput.value = ""
   resetUI()
+  itemInput.value = ""
 }
 
-// 2. Function to add an item to the DOM
-function addItemToDOM(item) {
+// 2. Function to add item to the DOM
+function addItemToDOM(itemName) {
   const li = document.createElement("li")
-  const text = document.createTextNode(item)
-  li.appendChild(text)
-  const button = createButton("remove-item btn-link text-red")
-  li.appendChild(button)
+  li.textContent = itemName
+
+  // Create btn container div
+  const btnContainer = document.createElement("div")
+  btnContainer.classList.add("btn-container")
+
+  // Create edit button
+  const editButton = createButton(
+    "edit-item btn-link",
+    "fa-solid fa-pen-to-square"
+  )
+
+  // Create remove button
+  const removeButton = createButton("remove-item btn-link", "fa-solid fa-trash")
+
+  // Append buttons to btn container
+  btnContainer.appendChild(editButton)
+  btnContainer.appendChild(removeButton)
+
+  // Append btn container to list item
+  li.appendChild(btnContainer)
+
+  // Append list item to list
   itemList.appendChild(li)
 }
 
-// 3. Function to create a button with specific classes
-function createButton(classes) {
+// 3. Function to create button and icon
+function createButton(classes, iconClass) {
   const button = document.createElement("button")
   button.className = classes
-  const icon = createIcon("fa-solid fa-xmark")
+
+  const icon = document.createElement("i")
+  icon.className = iconClass
+
   button.appendChild(icon)
   return button
 }
 
-// 4. Function to create an icon with specific classes
-function createIcon(classes) {
-  const icon = document.createElement("i")
-  icon.className = classes
-  return icon
-}
-
-// 11. Function to add an item to local storage
+// 8. Function to add an item to local storage
 function addItemToStorage(item) {
   const itemsFromStorage = getItemsFromStorage()
   itemsFromStorage.push(item)
@@ -88,54 +100,54 @@ function getItemsFromStorage(item) {
   return itemsFromStorage ? JSON.parse(itemsFromStorage) : []
 }
 
-// 5. Function to handle item click
+// 11. Function to handle item click
 function handleItemClick(e) {
-  if (e.target.parentElement.classList.contains("remove-item")) {
-    removeItem(e.target.parentElement.parentElement)
-    resetUI()
-  } else {
-    activateEditMode(e.target)
+  const list = e.target.parentElement
+  if (list.classList.contains("remove-item")) {
+    removeItem(list.parentElement.parentElement)
+  }
+  if (list.classList.contains("edit-item")) {
+    activateEditMode(list.parentElement.parentElement)
   }
 }
 
-// 15. Function to handle duplicate item
-function isItemDuplicate(item) {
-  const itemsFromStorage = getItemsFromStorage()
-  return itemsFromStorage.includes(item)
-}
-
-// 14.  Function to activate edit mode for a specific item
+// 13. Function to activate edit mode for a specific item
 function activateEditMode(item) {
   isEditMode = true
   itemList.querySelectorAll("li").forEach((li) => {
     li.classList.remove("edit-mode")
   })
   item.classList.add("edit-mode")
-  formBtn.innerHTML = `<i class="fa-solid fa-pen"></i> Update Item`
-  formBtn.style.backgroundColor = "lightcoral"
+  formBtn.innerHTML = "<i class='fa-solid fa-pen-to-square'></i> Update Item"
+  formBtn.classList.add("update-btn")
   itemInput.value = item.textContent
-  itemForm.scrollIntoView({ behavior: "smooth", block: "start" })
 }
 
-// 6. Function to remove an item from the DOM and local storage
+// 14. Function to check if an item is a duplicate
+function isItemDuplicate(item) {
+  const itemsFromStorage = getItemsFromStorage()
+  return itemsFromStorage.includes(item)
+}
+
+// 4. Function to remove item from the DOM and local storage
 function removeItem(item) {
-  if (confirm("Are you sure you want to remove this item?")) {
+  if (confirm("Are you sure?")) {
     item.remove()
-    removeItemFromStorage(item.textContent)
+    removeItemFromStorage(item)
+    resetUI()
   }
-  resetUI()
 }
 
-// 13. Function to remove an item from local storage
+// 12. Function to remove item from local storage
 function removeItemFromStorage(item) {
   const itemsFromStorage = getItemsFromStorage()
-  const updateItems = itemsFromStorage.filter((i) => {
-    return i !== item
+  const updatedItems = itemsFromStorage.filter((li) => {
+    return li !== item.textContent
   })
-  localStorage.setItem("items", JSON.stringify(updateItems))
+  localStorage.setItem("items", JSON.stringify(updatedItems))
 }
 
-// 7. Function to clear all items
+// 5. Function to clear all items
 function handleClearItems() {
   while (itemList.firstChild) {
     itemList.firstChild.remove()
@@ -144,16 +156,18 @@ function handleClearItems() {
   resetUI()
 }
 
-// 8. Function to reset the UI
+// 6. Function to reset UI
 function resetUI() {
-  itemInput.value = ""
   const items = itemList.querySelectorAll("li")
-  itemFilter.style.display = items.length === 0 ? "none" : ""
-  filterIcon.style.display = items.length === 0 ? "none" : ""
-  clearBtn.style.display = items.length === 0 ? "none" : ""
-
-  formBtn.innerHTML = `<i class="fa-solid fa-plus"></i> Add Item`
-  formBtn.style.backgroundColor = "lightblue"
+  if (items.length === 0) {
+    itemFilter.style.display = "none"
+    clearBtn.style.display = "none"
+  } else {
+    itemFilter.style.display = "block"
+    clearBtn.style.display = "block"
+  }
+  formBtn.innerHTML = "<i class='fa-solid fa-plus'></i> Add Item"
+  formBtn.classList.remove("update-btn")
   isEditMode = false
 }
 resetUI()

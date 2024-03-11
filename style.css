@@ -1,19 +1,14 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap");
-
-*,
-*::before,
-*::after {
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: "Times New Roman", Times, serif;
   font-size: 16px;
-  line-height: 1.5;
-  color: #333;
-  background-color: #f5f5f5;
+  color: black;
+  background-color: whitesmoke;
 }
 
 header {
@@ -24,8 +19,8 @@ header {
 }
 
 header h1 {
-  font-weight: 300;
-  margin-left: 10px;
+  font-weight: 600;
+  margin-left: 20px;
 }
 
 .container {
@@ -51,25 +46,14 @@ header h1 {
   font-size: 18px;
   margin-bottom: 20px;
   padding: 10px;
-  border: none;
-  border-bottom: 1px solid #ccc;
-  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   outline: none;
-}
-
-.filter {
-  position: relative;
-}
-
-.fa-filter {
-  position: absolute;
-  left: -10px;
-  top: 32px;
 }
 
 /* Buttons */
 .btn {
-  background-color: lightblue;
+  background-color: #0086f6;
   color: black;
   font-weight: 600;
   border: none;
@@ -79,7 +63,7 @@ header h1 {
 }
 
 .btn:hover {
-  background-color: #444;
+  background-color: #339af0;
 }
 
 .btn-link {
@@ -95,7 +79,7 @@ header h1 {
   margin-top: 20px;
   width: 100%;
   font-size: 16px;
-  background-color: lightblue;
+  background-color: #0086f6;
   color: #000000;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -104,11 +88,7 @@ header h1 {
 }
 
 .btn-clear:hover {
-  background-color: whitesmoke;
-}
-
-.text-red {
-  color: red;
+  background-color: #339af0;
 }
 
 /* Items */
@@ -128,13 +108,24 @@ header h1 {
   padding: 10px 15px;
   margin: 0 5px 20px;
   font-weight: 700;
-  cursor: pointer;
+}
+
+.btn-container button {
+  margin-left: 10px;
 }
 
 /* Edit mode */
 .edit-mode {
   color: #b4b4b4;
 }
+
+.update-btn {
+  background-color: #9aff00;
+}
+.update-btn:hover {
+  background-color: #b4ff00;
+}
+
 
 @media (max-width: 500px) {
   .items li {

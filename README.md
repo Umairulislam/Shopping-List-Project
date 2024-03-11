@@ -25,8 +25,8 @@ This is a simple shopping list application built with Vanilla JavaScript. It all
 No special setup is required. Just clone the repository and open `index.html` in your browser.
 
 ```bash
-git clone <repository-url>
-cd <repository-directory>
+git clone <https://github.com/Umairulislam/Shopping-List-Project.git>
+cd <Shopping-List-Project>
 open index.html
 ```
 
